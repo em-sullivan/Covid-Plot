@@ -16,6 +16,7 @@ import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
+from pandas.plotting import register_matplotlib_converters
 
 class CovidData:
 
@@ -23,6 +24,8 @@ class CovidData:
         self.label = label
         self.data = self.downloadData(url)
         self.dates = []
+        # Needed for conversions
+        register_matplotlib_converters()
 
     def downloadData(self, url):
         '''
@@ -39,7 +42,7 @@ class CovidData:
     
     def formatData(self):
         '''
-        Formats Data
+        Formats data frame so it only has the date columns
         '''
         if self.data.empty:
             print("Error! No data to format")
@@ -51,21 +54,20 @@ class CovidData:
             else:
                 self.data = self.data.drop([i], axis = 1)
                 
-        #if dateFound is None:
-        #    return
-        #self.npdata = self.data.to_numpy()
-        #print(dateFound.group(0))
-        #print(self.data)
-        #print(self.npdata)
+        if dateFound is None:
+            print("Error! No dates found in the data")
 
     def convertDates(self):
+        '''
+        Converts dates from graphs into datetime objects
+        for the graphs
+        '''
         if self.data.empty:
             print("Error! No data present")
             return
        
         for i in self.data.columns:
             self.dates.append(datetime.datetime.strptime(i, "%m/%d/%y"))
-        print(self.dates)
 
     def plotData(self):
         self.formatData()
@@ -89,10 +91,8 @@ class CovidData:
 if __name__ == '__main__':
     deathsUSurl = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv'
     
-    death = CovidData(deathsUSurl, "usdeaths")
-    print(death.data)
-    print(death.data.iloc[:,2])
-    print(death.data.columns[1])
-    #death.formatData()
-    #death.convertDates()
+    death = CovidData(deathsUSurl, "Total Deaths in US")
+    #print(death.data)
+    #print(death.data.iloc[:,2])
+    #print(death.data.columns[1])
     death.plotData()
