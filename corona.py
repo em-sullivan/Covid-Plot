@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 '''
 Eric Sullivan
 05/30/2020
@@ -20,8 +21,7 @@ from pandas.plotting import register_matplotlib_converters
 
 class CovidData:
 
-    def __init__(self, url, label):
-        self.label = label
+    def __init__(self, url):
         self.data = self.downloadData(url)
         self.dates = []
         # Needed for conversions
@@ -42,45 +42,51 @@ class CovidData:
     
     def formatData(self):
         '''
-        Formats data frame so it only has the date columns
+        Formats data frame so it only has the date columns - This is for graphing
+        the accumulative total of cases/deaths.
         '''
-        if self.data.empty:
+        # Gets a hard copy of the current data frame
+        df = self.data.copy()
+        if df.empty:
             print("Error! No data to format")
-            return
-        for i in self.data.columns:
+            return None
+        for i in df.columns:
             dateFound = re.search(r'([0-9]?[0-9])/([0-9]?[0-9])/([0-9][0-9])', i)
             if dateFound is not None:
                 break
             else:
-                self.data = self.data.drop([i], axis = 1)
+                df= df.drop([i], axis = 1)
                 
         if dateFound is None:
             print("Error! No dates found in the data")
+            return None
+        else:
+            return df
 
-    def convertDates(self):
+    def convertDates(self, df):
         '''
         Converts dates from graphs into datetime objects
         for the graphs
         '''
-        if self.data.empty:
+        if df.empty:
             print("Error! No data present")
             return
        
-        for i in self.data.columns:
+        for i in df.columns:
             self.dates.append(datetime.datetime.strptime(i, "%m/%d/%y"))
 
-    def plotData(self):
-        self.formatData()
-        self.convertDates()
+    def plotData(self, title, linetype):
+        df = self.formatData()
+        self.convertDates(df)
         self.dates = md.date2num(self.dates)
-        dataPoints = self.data.to_numpy()
+        dataPoints = df.to_numpy()
 
         sumPoints = []
         for i in range(dataPoints.shape[1]):
             sumPoints.append(np.sum(dataPoints[:, i]))
         
-        plt.plot_date(self.dates, sumPoints, 'r-')
-        plt.title(self.label)
+        plt.plot_date(self.dates, sumPoints, linetype)
+        plt.title(title)
         plt.grid(linestyle='-', linewidth = 2)
         plt.xlabel("Date")
         plt.ylabel("Number of People")
@@ -90,9 +96,12 @@ class CovidData:
 
 if __name__ == '__main__':
     deathsUSurl = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv'
+    confirmedUSurl = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv'
     
-    death = CovidData(deathsUSurl, "Total Deaths in US")
+    death = CovidData(deathsUSurl)
     #print(death.data)
     #print(death.data.iloc[:,2])
     #print(death.data.columns[1])
-    death.plotData()
+    death.plotData("Total Deaths in the US", 'r-')
+    confirmed = CovidData(confirmedUSurl)
+    confirmed.plotData("Total Confirmed Cases in the US", 'b-')
