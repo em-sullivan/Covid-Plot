@@ -23,7 +23,7 @@ class CovidData:
 
     def __init__(self, url):
         self.data = self.downloadData(url)
-        self.dates = []
+        self.dates = self.convertDates(self.formatData())
         # Needed for conversions
         register_matplotlib_converters()
 
@@ -68,24 +68,30 @@ class CovidData:
         Converts dates from graphs into datetime objects
         for the graphs
         '''
+        dates = []
         if df.empty:
             print("Error! No data present")
-            return
-       
-        for i in df.columns:
-            self.dates.append(datetime.datetime.strptime(i, "%m/%d/%y"))
+            return None
+        try:
+            for i in df.columns:
+                dates.append(datetime.datetime.strptime(i, "%m/%d/%y"))
+            
+            return dates
+
+        except:
+            print("Error! Probelm with getting dates!")
+            return None
 
     def plotData(self, title, linetype):
         df = self.formatData()
-        self.convertDates(df)
-        self.dates = md.date2num(self.dates)
+        dates = md.date2num(self.dates)
         dataPoints = df.to_numpy()
 
         sumPoints = []
         for i in range(dataPoints.shape[1]):
             sumPoints.append(np.sum(dataPoints[:, i]))
         
-        plt.plot_date(self.dates, sumPoints, linetype)
+        plt.plot_date(dates, sumPoints, linetype)
         plt.title(title)
         plt.grid(linestyle='-', linewidth = 2)
         plt.xlabel("Date")
