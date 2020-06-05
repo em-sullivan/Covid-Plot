@@ -82,7 +82,7 @@ class CovidData:
             print("Error! Probelm with getting dates!")
             return None
 
-    def plotData(self, title, linetype):
+    def plotData(self, title, linetype, rate = False):
         df = self.formatData()
         dates = md.date2num(self.dates)
         dataPoints = df.to_numpy()
@@ -90,8 +90,18 @@ class CovidData:
         sumPoints = []
         for i in range(dataPoints.shape[1]):
             sumPoints.append(np.sum(dataPoints[:, i]))
+
+        # This is if you want to see the cases/deaths per day
+        if rate is True:
+            rate = []
+            rate.append(sumPoints[0])
+            for i in range(1, len(sumPoints)):
+                rate.append(sumPoints[i] - sumPoints[i-1])
+            
+            plt.plot_date(dates, rate, linetype)
+        else:
+            plt.plot_date(dates, sumPoints, linetype)
         
-        plt.plot_date(dates, sumPoints, linetype)
         plt.title(title)
         plt.grid(linestyle='-', linewidth = 2)
         plt.xlabel("Date")
@@ -108,6 +118,6 @@ if __name__ == '__main__':
     #print(death.data)
     #print(death.data.iloc[:,2])
     #print(death.data.columns[1])
-    death.plotData("Total Deaths in the US", 'r-')
+    death.plotData("Total Deaths in the US", 'r-', True)
     confirmed = CovidData(confirmedUSurl)
     confirmed.plotData("Total Confirmed Cases in the US", 'b-')
