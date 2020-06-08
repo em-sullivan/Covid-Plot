@@ -41,7 +41,7 @@ class App(tk.Frame):
         del(deaths)
 
     def plotAllConfirmedUS(self):
-        confirmed = CovidData('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv')
+        confirmed = CovidData('https://tinyurl.com/uynhaxd')
         confirmed.plotData("Total Confrimed Covid Cases in the US", 'c-')
         del(confirmed)
     

@@ -120,4 +120,4 @@ if __name__ == '__main__':
     #print(death.data.columns[1])
     death.plotData("Total Deaths in the US", 'r-', True)
     confirmed = CovidData(confirmedUSurl)
-    confirmed.plotData("Total Confirmed Cases in the US", 'b-')
+    confirmed.plotData("Total Confirmed Cases in the US", 'b-', True)
