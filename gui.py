@@ -20,32 +20,24 @@ class App(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        self.usDeaths = tk.Button(self)
-        self.usDeaths["text"] = "US Covid Deaths"
-        self.usDeaths["command"] = self.plotAllDeathsUS
-        self.usDeaths.pack(side = "top")
+        
+        self.deathUS = tk.Checkbutton(self, text = 'Deaths US', variable = self.subjs[0])
+        self.deathUS.pack(side = "top")
 
         self.rates = tk.Checkbutton(self, text = 'Daily Rate', variable = self.rateVar)
         self.rates.pack(side = "right")
+        
+        self.confirmedUS = tk.Checkbutton(self, text = 'Confirmed US', variable = self.subjs[1])
+        self.confirmedUS.pack(side = "top")
 
-        self.usCases = tk.Button(self, text = "US Confirmed Covid Cases")
-        self.usCases["command"] = self.plotAllConfirmedUS
-        self.usCases.pack(side = "top")
+        self.deathWorld = tk.Checkbutton(self, text = 'Deaths World', variable = self.subjs[2])
+        self.deathWorld.pack(side = "top")
 
-        self.worldDeaths = tk.Button(self, text = "World Covid Deaths")
-        self.worldDeaths["command"] = self.plotAllDeathsWD
-        self.worldDeaths.pack(side = "top")
+        self.confirmedUS = tk.Checkbutton(self, text = 'Confirmed World', variable = self.subjs[3])
+        self.confirmedUS.pack(side = "top")
 
-        self.worldConfirmed = tk.Button(self, text = "World Confirmed Covid Cases")
-        self.worldConfirmed["command"] = self.plotAllConfirmedWD
-        self.worldConfirmed.pack(side = "top")
-
-        self.worldRecoverd = tk.Button(self, text = "World Recovered Covid Cases")
-        self.worldRecoverd["command"] = self.plotAllRecoveredWD
-        self.worldRecoverd.pack(side = "top") 
-
-        self.deathus = tk.Checkbutton(self, text = 'Deaths US', variable = self.subjs[0])
-        self.deathus.pack(side = "right")
+        self.recoveredWorld = tk.Checkbutton(self, text = 'Recovered World', variable = self.subjs[4])
+        self.recoveredWorld.pack(side = "top") 
 
         self.plotButton = tk.Button(self, text = "Plot")
         self.plotButton["command"] = self.plotAll
@@ -92,11 +84,29 @@ class App(tk.Frame):
         del(recovered)
     
     def plotAll(self):
+
+        dataUrls = ['https://tinyurl.com/vxbdvgo',
+            'https://tinyurl.com/uynhaxd',
+            'https://tinyurl.com/rlssflz',
+            'https://tinyurl.com/tsqkf7y',
+            'https://tinyurl.com/vtcebxt']
+
+        colors = ['#ff4500', 'c-', 'r-', 'b-', 'g-']
+
+        labels = ["Deaths: US",
+            "Confirmed Cases: US",
+            "Deaths: World",
+            "Confirmed: World",
+            "Recovered: World"]
+
         rate = self.checkBool(self.rateVar)
-        if self.checkBool(self.subjs[0]):
-            deaths = CovidData('https://tinyurl.com/vxbdvgo')
-            deaths.plotData("Total Deaths in the US", '#ff4500', rate)
-            (deaths)
+        
+        for i in range(5):
+            if self.checkBool(self.subjs[i]):
+                data = CovidData(dataUrls[i])
+                data.plotData(labels[i], colors[i], rate)
+
+        data.showPlot()
 
 
 root = tk.Tk()

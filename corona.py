@@ -106,6 +106,9 @@ class CovidData:
         plt.grid(linestyle='-', linewidth = 2)
         plt.xlabel("Date")
         plt.ylabel("Number of People")
+        # plt.show()
+
+    def showPlot(self):
         plt.show()
 
 
@@ -119,5 +122,7 @@ if __name__ == '__main__':
     #print(death.data.iloc[:,2])
     #print(death.data.columns[1])
     death.plotData("Total Deaths in the US", 'r-', True)
+    death.showPlot()
     confirmed = CovidData(confirmedUSurl)
     confirmed.plotData("Total Confirmed Cases in the US", 'b-', True)
+    confirmed.showPlot()
