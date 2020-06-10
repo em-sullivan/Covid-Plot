@@ -82,7 +82,7 @@ class CovidData:
             print("Error! Probelm with getting dates!")
             return None
 
-    def plotData(self, title, linetype, rate = False):
+    def plotData(self, label, linetype, rate = False):
         df = self.formatData()
         dates = md.date2num(self.dates)
         dataPoints = df.to_numpy()
@@ -98,17 +98,15 @@ class CovidData:
             for i in range(1, len(sumPoints)):
                 rate.append(sumPoints[i] - sumPoints[i-1])
             
-            plt.plot_date(dates, rate, linetype)
+            plt.plot_date(dates, rate, linetype, label = label)
         else:
-            plt.plot_date(dates, sumPoints, linetype)
-        
-        plt.title(title)
+            plt.plot_date(dates, sumPoints, linetype, label = label)
+
+    def showPlot(self):
         plt.grid(linestyle='-', linewidth = 2)
         plt.xlabel("Date")
         plt.ylabel("Number of People")
-        # plt.show()
-
-    def showPlot(self):
+        plt.legend()
         plt.show()
 
 
@@ -121,8 +119,8 @@ if __name__ == '__main__':
     #print(death.data)
     #print(death.data.iloc[:,2])
     #print(death.data.columns[1])
-    death.plotData("Total Deaths in the US", 'r-', True)
+    death.plotData("Deaths: US", 'r-', True)
     death.showPlot()
     confirmed = CovidData(confirmedUSurl)
-    confirmed.plotData("Total Confirmed Cases in the US", 'b-', True)
+    confirmed.plotData("Confirmed: US", 'b-', True)
     confirmed.showPlot()

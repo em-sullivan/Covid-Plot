@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import tkinter as tk
+import matplotlib.pyplot as plt
 from corona import CovidData
 
 class App(tk.Frame):
@@ -16,7 +17,7 @@ class App(tk.Frame):
         self.subjs = []
         for i in range(5):
             self.subjs.append(tk.IntVar())
-
+        
         self.create_widgets()
 
     def create_widgets(self):
@@ -98,6 +99,10 @@ class App(tk.Frame):
             "Deaths: World",
             "Confirmed: World",
             "Recovered: World"]
+
+        if plt.get_fignums():
+            print("Figure already exsits!")
+            return
 
         rate = self.checkBool(self.rateVar)
         
