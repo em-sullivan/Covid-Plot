@@ -7,7 +7,21 @@ class App(tk.Frame):
     def __init__(self, master = None):
         super().__init__(master)
         self.master = master
+        self.title("Covid-19 Tracker")
         self.pack()
+        
+        # Bools for graphing rate or if a figure exsits
+        self.rateVar = tk.IntVar()
+        self.figExsists = tk.IntVar() 
+
+        self.plotTypes = {
+            "USDeaths": False,
+            "USConfirm": False,
+            "WorldDeaths": False,
+            "WorldConfirm": False,
+            "WorldRecovered": False,
+        }
+
         self.create_widgets()
 
     def create_widgets(self):
@@ -15,6 +29,10 @@ class App(tk.Frame):
         self.usDeaths["text"] = "US Covid Deaths"
         self.usDeaths["command"] = self.plotAllDeathsUS
         self.usDeaths.pack(side = "top")
+
+        self.rates = tk.Checkbutton(self, text = 'Daily Rate', variable = self.rateVar)
+        #self.rates["command"] = self.toggleBool
+        self.rates.pack(side = "right")
 
         self.usCases = tk.Button(self, text = "US Confirmed Covid Cases")
         self.usCases["command"] = self.plotAllConfirmedUS
@@ -34,30 +52,42 @@ class App(tk.Frame):
 
         self.quit = tk.Button(self, text = "Quit", fg = "red", command = self.master.destroy)
         self.quit.pack(side = "bottom")
+    
+    def checkBool(self, val):
+        if val.get() == 1:
+            return True
+        else:
+            return False
 
     def plotAllDeathsUS(self):
+        
+        rate = self.checkBool(self.rateVar)
         deaths = CovidData('https://tinyurl.com/vxbdvgo')
-        deaths.plotData("Total Deaths in the US", '#ff4500')
+        deaths.plotData("Total Deaths in the US", '#ff4500', rate)
         del(deaths)
 
     def plotAllConfirmedUS(self):
+        rate = self.checkBool(self.rateVar)
         confirmed = CovidData('https://tinyurl.com/uynhaxd')
-        confirmed.plotData("Total Confrimed Covid Cases in the US", 'c-')
+        confirmed.plotData("Total Confrimed Covid Cases in the US", 'c-', rate)
         del(confirmed)
     
     def plotAllDeathsWD(self):
+        rate = self.checkBool(self.rateVar)
         deaths = CovidData('https://tinyurl.com/rlssflz')
-        deaths.plotData("Total Deaths Globally", 'r-')
+        deaths.plotData("Total Deaths Globally", 'r-', rate)
         del(deaths)
 
     def plotAllConfirmedWD(self):
+        rate = self.checkBool(self.rateVar)
         confirmed = CovidData('https://tinyurl.com/tsqkf7y')
-        confirmed.plotData("Total Confirmed Covid Cases WorldWide", 'b-')
+        confirmed.plotData("Total Confirmed Covid Cases WorldWide", 'b-', rate)
         del(confirmed)
 
     def plotAllRecoveredWD(self):
+        rate = self.checkBool(self.rateVar)
         recovered = CovidData('https://tinyurl.com/vtcebxt')
-        recovered.plotData("Total Recovered Cases WorldWide", 'g-')
+        recovered.plotData("Total Recovered Cases WorldWide", 'g-', rate)
         del(recovered)
 
 root = tk.Tk()
