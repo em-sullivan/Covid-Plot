@@ -7,20 +7,15 @@ class App(tk.Frame):
     def __init__(self, master = None):
         super().__init__(master)
         self.master = master
-        self.title("Covid-19 Tracker")
         self.pack()
         
         # Bools for graphing rate or if a figure exsits
         self.rateVar = tk.IntVar()
-        self.figExsists = tk.IntVar() 
+        self.figExsists = tk.IntVar()
 
-        self.plotTypes = {
-            "USDeaths": False,
-            "USConfirm": False,
-            "WorldDeaths": False,
-            "WorldConfirm": False,
-            "WorldRecovered": False,
-        }
+        self.subjs = []
+        for i in range(5):
+            self.subjs.append(tk.IntVar())
 
         self.create_widgets()
 
@@ -31,7 +26,6 @@ class App(tk.Frame):
         self.usDeaths.pack(side = "top")
 
         self.rates = tk.Checkbutton(self, text = 'Daily Rate', variable = self.rateVar)
-        #self.rates["command"] = self.toggleBool
         self.rates.pack(side = "right")
 
         self.usCases = tk.Button(self, text = "US Confirmed Covid Cases")
@@ -49,6 +43,13 @@ class App(tk.Frame):
         self.worldRecoverd = tk.Button(self, text = "World Recovered Covid Cases")
         self.worldRecoverd["command"] = self.plotAllRecoveredWD
         self.worldRecoverd.pack(side = "top") 
+
+        self.deathus = tk.Checkbutton(self, text = 'Deaths US', variable = self.subjs[0])
+        self.deathus.pack(side = "right")
+
+        self.plotButton = tk.Button(self, text = "Plot")
+        self.plotButton["command"] = self.plotAll
+        self.plotButton.pack(side = "top")
 
         self.quit = tk.Button(self, text = "Quit", fg = "red", command = self.master.destroy)
         self.quit.pack(side = "bottom")
@@ -89,6 +90,14 @@ class App(tk.Frame):
         recovered = CovidData('https://tinyurl.com/vtcebxt')
         recovered.plotData("Total Recovered Cases WorldWide", 'g-', rate)
         del(recovered)
+    
+    def plotAll(self):
+        rate = self.checkBool(self.rateVar)
+        if self.checkBool(self.subjs[0]):
+            deaths = CovidData('https://tinyurl.com/vxbdvgo')
+            deaths.plotData("Total Deaths in the US", '#ff4500', rate)
+            (deaths)
+
 
 root = tk.Tk()
 app = App(master = root)
