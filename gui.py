@@ -52,37 +52,6 @@ class App(tk.Frame):
             return True
         else:
             return False
-
-    def plotAllDeathsUS(self):
-        
-        rate = self.checkBool(self.rateVar)
-        deaths = CovidData('https://tinyurl.com/vxbdvgo')
-        deaths.plotData("Total Deaths in the US", '#ff4500', rate)
-        del(deaths)
-
-    def plotAllConfirmedUS(self):
-        rate = self.checkBool(self.rateVar)
-        confirmed = CovidData('https://tinyurl.com/uynhaxd')
-        confirmed.plotData("Total Confrimed Covid Cases in the US", 'c-', rate)
-        del(confirmed)
-    
-    def plotAllDeathsWD(self):
-        rate = self.checkBool(self.rateVar)
-        deaths = CovidData('https://tinyurl.com/rlssflz')
-        deaths.plotData("Total Deaths Globally", 'r-', rate)
-        del(deaths)
-
-    def plotAllConfirmedWD(self):
-        rate = self.checkBool(self.rateVar)
-        confirmed = CovidData('https://tinyurl.com/tsqkf7y')
-        confirmed.plotData("Total Confirmed Covid Cases WorldWide", 'b-', rate)
-        del(confirmed)
-
-    def plotAllRecoveredWD(self):
-        rate = self.checkBool(self.rateVar)
-        recovered = CovidData('https://tinyurl.com/vtcebxt')
-        recovered.plotData("Total Recovered Cases WorldWide", 'g-', rate)
-        del(recovered)
     
     def plotAll(self):
 
