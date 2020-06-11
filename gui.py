@@ -8,12 +8,14 @@ class App(tk.Frame):
     def __init__(self, master = None):
         super().__init__(master)
         self.master = master
+        self.master.title('Covid-19 Tracker')
         self.pack()
         
         # Bools for graphing rate or if a figure exsits
         self.rateVar = tk.IntVar()
         self.figExsists = tk.IntVar()
 
+        # Vars to determine what needs to be graphed
         self.subjs = []
         for i in range(5):
             self.subjs.append(tk.IntVar())
@@ -55,6 +57,8 @@ class App(tk.Frame):
     
     def plotAll(self):
 
+        atLeastOne = False
+
         dataUrls = ['https://tinyurl.com/vxbdvgo',
             'https://tinyurl.com/uynhaxd',
             'https://tinyurl.com/rlssflz',
@@ -79,8 +83,12 @@ class App(tk.Frame):
             if self.checkBool(self.subjs[i]):
                 data = CovidData(dataUrls[i])
                 data.plotData(labels[i], colors[i], rate)
+                atLeastOne = True
 
-        data.showPlot()
+        if atLeastOne is True:
+            data.showPlot()
+        else:
+            print("There is nothing to graph!")
 
 
 root = tk.Tk()
