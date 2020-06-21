@@ -22,6 +22,10 @@ from pandas.plotting import register_matplotlib_converters
 class CovidData:
 
     def __init__(self, url):
+        '''
+        CovidData object that takes url to John Hopkins csv file, then
+        downloads it and stores it into a pandas dataframe
+        '''
         self.data = self.downloadData(url)
         self.dates = self.convertDates(self.formatData())
         # Needed for conversions
@@ -83,6 +87,12 @@ class CovidData:
             return None
 
     def plotData(self, label, linetype, rate = False):
+        '''
+        Plots the data currently stored in the objects data frame.
+        NOTE: This does not show the pyplot, that has to be called with
+        showPlot, this allows you to plot multiple data sets before the final
+        graph is shown.
+        '''
         df = self.formatData()
         dates = md.date2num(self.dates)
         dataPoints = df.to_numpy()
@@ -103,6 +113,11 @@ class CovidData:
             plt.plot_date(dates, sumPoints, linetype, label = label)
 
     def showPlot(self):
+        '''
+        Creates a figure that is a graph of all of the current statistics
+        plotted with CovidData. This spans multiple objects, which means this will
+        show plotted results from one or more CovidData objects
+        '''
         plt.grid(linestyle='-', linewidth = 2)
         plt.xlabel("Date")
         plt.ylabel("Number of People")
