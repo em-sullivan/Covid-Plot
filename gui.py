@@ -86,7 +86,10 @@ class App(tk.Frame):
                 atLeastOne = True
 
         if atLeastOne is True:
-            data.showPlot()
+            if rate is True:
+                data.showPlot("Cases by Day")
+            else:
+                data.showPlot("Accumulative Cases")
         else:
             print("There is nothing to graph!")
 

@@ -112,7 +112,7 @@ class CovidData:
         else:
             plt.plot_date(dates, sumPoints, linetype, label = label)
 
-    def showPlot(self):
+    def showPlot(self, title = None):
         '''
         Creates a figure that is a graph of all of the current statistics
         plotted with CovidData. This spans multiple objects, which means this will
@@ -121,6 +121,8 @@ class CovidData:
         plt.grid(linestyle='-', linewidth = 2)
         plt.xlabel("Date")
         plt.ylabel("Number of People")
+        if title is not None:
+            plt.title(str(title))
         plt.legend()
         plt.show()
 
@@ -138,4 +140,4 @@ if __name__ == '__main__':
     death.showPlot()
     confirmed = CovidData(confirmedUSurl)
     confirmed.plotData("Confirmed: US", 'b-', True)
-    confirmed.showPlot()
+    confirmed.showPlot("Poop")
